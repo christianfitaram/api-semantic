@@ -31,6 +31,28 @@ This downloads/caches the embedding model inside `models/`.
 poetry run uvicorn api_semantic.main:app --host 0.0.0.0 --port 8000
 ```
 
+## Docker
+
+Build image:
+
+```bash
+docker compose build
+```
+
+Download/cache the model once into a persistent named volume:
+
+```bash
+docker compose run --rm bootstrap
+```
+
+Run API with the same model volume:
+
+```bash
+docker compose up api
+```
+
+The named volume is `api_semantic_models` and is mounted at `/app/models`.
+
 ## Authentication
 
 All `/v1/*` endpoints require header:
