@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.venv/
+.env
+.poetry/
+.pytest_cache/
+.mypy_cache/
+coverage.xml
+htmlcov/
+models/*
+!models/.gitkeep
+*/__pycache__/
+*/*/__pycache__/
+models
