@@ -1,7 +1,6 @@
 from fastapi import Depends, FastAPI, HTTPException, status
 
 from api_semantic.auth import require_api_key
-from api_semantic.bootstrap import bootstrap_model
 from api_semantic.embeddings import get_embedding_service
 from api_semantic.schemas import (
     EmbedRequest,
@@ -9,11 +8,6 @@ from api_semantic.schemas import (
 )
 
 app = FastAPI(title="API Semantic", version="0.1.0")
-
-
-@app.on_event("startup")
-def startup_event() -> None:
-    bootstrap_model()
 
 
 @app.get("/health")
