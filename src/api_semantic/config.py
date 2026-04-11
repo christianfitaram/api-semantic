@@ -8,7 +8,7 @@ DEFAULT_EMBEDDING_DEVICE = "cpu"
 
 
 class Settings(BaseSettings):
-    api_key: str = "change-this-api-key"
+    api_key: str
     embedding_model: str = DEFAULT_EMBEDDING_MODEL
     embedding_device: str = DEFAULT_EMBEDDING_DEVICE
     models_dir: Path = Path("models")

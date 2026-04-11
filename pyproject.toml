@@ -3,7 +3,19 @@ name = "api-semantic"
 version = "0.1.0"
 description = "FastAPI service for text embeddings"
 readme = "README.md"
-authors = [{ name = "Christian Fita", email = "you@example.com" }]
+authors = [{ name = "Christian Fita" }]
+license = { text = "MIT" }
+keywords = ["fastapi", "embeddings", "nlp", "sentence-transformers", "api"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Framework :: FastAPI",
+]
 requires-python = ">=3.10,<3.13"
 dependencies = [
   "fastapi>=0.116.0,<0.117.0",
@@ -13,12 +25,30 @@ dependencies = [
   "pydantic-settings>=2.8.1,<3.0.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/christianfitaram/api-semantic"
+Repository = "https://github.com/christianfitaram/api-semantic"
+Issues = "https://github.com/christianfitaram/api-semantic/issues"
+
 [tool.poetry]
 packages = [{ include = "api_semantic", from = "src" }]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.4"
 httpx = "^0.28.1"
+ruff = "^0.11.6"
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["B008"]
 
 [build-system]
 requires = ["poetry-core>=1.8.0"]

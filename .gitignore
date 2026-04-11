@@ -7,10 +7,10 @@ __pycache__/
 .poetry/
 .pytest_cache/
 .mypy_cache/
+.ruff_cache/
 coverage.xml
 htmlcov/
 models/*
 !models/.gitkeep
 */__pycache__/
 */*/__pycache__/
-models

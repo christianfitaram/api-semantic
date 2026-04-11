@@ -1,34 +1,54 @@
-# API Semantic
+# api-semantic
 
-FastAPI + Poetry service that:
+`api-semantic` is a FastAPI service that converts text into normalized embedding vectors using `sentence-transformers`.
 
-- converts text to embedding vectors
+## Features
 
-## Defaults
+- `POST /v1/embed` endpoint for single or batch text inputs
+- API key authentication on all `/v1/*` routes
+- Optional model bootstrap command to warm local model cache
+- Docker and Docker Compose support
 
-- `DEFAULT_EMBEDDING_MODEL = "BAAI/bge-m3"`
-- `DEFAULT_EMBEDDING_DEVICE = "cpu"`
-- model cache directory: `models/`
+## Requirements
 
-## Setup
+- Python `>=3.10,<3.13`
+- Poetry `>=1.8`
+
+## Quickstart
 
 ```bash
-poetry install
+poetry install --with dev
 cp .env.example .env
-```
-
-## Bootstrap model files
-
-```bash
 poetry run python -m api_semantic.bootstrap
+poetry run uvicorn api_semantic.main:app --host 0.0.0.0 --port 8000
 ```
 
-This downloads/caches the embedding model inside `models/`.
+## Configuration
 
-## Run API
+Configuration is loaded from environment variables (or `.env`).
+
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `API_KEY` | Yes | - | API key required by `/v1/*` endpoints |
+| `EMBEDDING_MODEL` | No | `BAAI/bge-m3` | HuggingFace model id |
+| `EMBEDDING_DEVICE` | No | `cpu` | Inference device (for example `cpu`, `cuda`) |
+| `MODELS_DIR` | No | `models` | Local path for model cache |
+
+## API
+
+### Health
 
 ```bash
-poetry run uvicorn api_semantic.main:app --host 0.0.0.0 --port 8000
+curl http://localhost:8000/health
+```
+
+### Embed
+
+```bash
+curl -X POST "http://localhost:8000/v1/embed" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: local-dev-key" \
+  -d '{"text":"hello world"}'
 ```
 
 ## Docker
@@ -39,39 +59,33 @@ Build image:
 docker compose build
 ```
 
-Download/cache the model once into a persistent named volume:
+Bootstrap model files into the persistent volume:
 
 ```bash
 docker compose run --rm bootstrap
 ```
 
-Run API with the same model volume:
+Run API:
 
 ```bash
 docker compose up api
 ```
 
-The named volume is `api_semantic_models` and is mounted at `/app/models`.
+The named volume is `api_semantic_models` mounted at `/app/models`.
 
-## Authentication
+## Development
 
-All `/v1/*` endpoints require header:
-
-```text
-X-API-Key: <API_KEY from .env>
-```
-
-## Endpoints
-
-- `POST /v1/embed` - text to vectors
-- `GET /health` - health check
-
-## Example requests
+Run lint and tests:
 
 ```bash
-curl -X POST "http://localhost:8000/v1/embed" \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: change-this-api-key" \
-  -d '{"text":"hello world"}'
+poetry run ruff check .
+poetry run pytest
 ```
-# api-semantic
+
+## Security
+
+If you discover a vulnerability, please follow [`SECURITY.md`](SECURITY.md).
+
+## License
+
+This project is licensed under the MIT License. See [`LICENSE`](LICENSE).
