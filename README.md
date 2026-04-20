@@ -1,5 +1,12 @@
 # api-semantic
 
+[![CI](https://github.com/christianfitaram/api-semantic/actions/workflows/ci.yml/badge.svg)](https://github.com/christianfitaram/api-semantic/actions/workflows/ci.yml)
+![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.116-009688)
+![Docker](https://img.shields.io/badge/docker-supported-2496ED)
+![Ruff](https://img.shields.io/badge/lint-ruff-46a2f1)
+
 `api-semantic` is a FastAPI service that converts text into normalized embedding vectors using `sentence-transformers`.
 
 ## Features
