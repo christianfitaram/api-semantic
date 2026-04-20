@@ -7,6 +7,7 @@
 - `POST /v1/embed` endpoint for single or batch text inputs
 - API key authentication on all `/v1/*` routes
 - Configurable request limits for text length and batch size
+- Readiness check that verifies the embedding model can load
 - Current model metadata endpoint
 - Optional model bootstrap command to warm local model cache
 - Docker and Docker Compose support
@@ -49,6 +50,22 @@ Configuration is loaded from environment variables (or `.env`).
 
 ```bash
 curl http://localhost:8000/health
+```
+
+### Readiness
+
+`/ready` loads the configured embedding model if needed and returns `503` if the model cannot be initialized.
+
+```bash
+curl http://localhost:8000/ready
+```
+
+Example response:
+
+```json
+{
+  "status": "ready"
+}
 ```
 
 ### Current model
@@ -132,6 +149,16 @@ Run lint and tests:
 ```bash
 poetry run ruff check .
 poetry run pytest
+```
+
+Run a local smoke test against a running API:
+
+```bash
+curl -f http://localhost:8000/ready
+curl -f -X POST "http://localhost:8000/v1/embed" \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: local-dev-key" \
+  -d '{"text":"smoke test"}'
 ```
 
 ## Security

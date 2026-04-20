@@ -11,6 +11,7 @@ from api_semantic.schemas import (
     CurrentModelResponse,
     EmbedRequest,
     EmbedResponse,
+    ReadyResponse,
 )
 
 configure_logging()
@@ -44,6 +45,19 @@ async def log_requests(request: Request, call_next):
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/ready", response_model=ReadyResponse)
+def ready() -> ReadyResponse:
+    try:
+        get_embedding_service().load()
+    except EmbeddingServiceError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Embedding service unavailable",
+        ) from exc
+
+    return ReadyResponse(status="ready")
 
 
 @app.get(

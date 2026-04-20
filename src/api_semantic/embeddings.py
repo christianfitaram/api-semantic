@@ -28,6 +28,9 @@ class EmbeddingService:
     def dimension(self) -> int | None:
         return self._dimension
 
+    def load(self) -> None:
+        self._load_model()
+
     def _load_model(self) -> SentenceTransformer:
         if self._model is not None:
             return self._model

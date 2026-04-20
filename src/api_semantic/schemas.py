@@ -30,3 +30,7 @@ class CurrentModelResponse(BaseModel):
     cache_dir: str
     max_text_length: int
     max_batch_size: int
+
+
+class ReadyResponse(BaseModel):
+    status: str

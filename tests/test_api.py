@@ -18,6 +18,10 @@ class _DummyEmbeddingService:
 
     def __init__(self) -> None:
         self.received_texts: list[str] = []
+        self.load_called = False
+
+    def load(self) -> None:
+        self.load_called = True
 
     def embed(self, texts: list[str]) -> np.ndarray:
         self.received_texts = texts
@@ -25,6 +29,9 @@ class _DummyEmbeddingService:
 
 
 class _FailingEmbeddingService(_DummyEmbeddingService):
+    def load(self) -> None:
+        raise EmbeddingServiceError("model unavailable")
+
     def embed(self, texts: list[str]) -> np.ndarray:
         raise EmbeddingServiceError("model unavailable")
 
@@ -53,6 +60,23 @@ def test_health_returns_ok(monkeypatch) -> None:
 
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
+
+
+def test_ready_loads_model_without_api_key(monkeypatch) -> None:
+    client, service = _make_client(monkeypatch)
+    response = client.get("/ready")
+
+    assert response.status_code == 200
+    assert response.json() == {"status": "ready"}
+    assert service.load_called is True
+
+
+def test_ready_returns_503_when_model_load_fails(monkeypatch) -> None:
+    client, _ = _make_client(monkeypatch, service=_FailingEmbeddingService())
+    response = client.get("/ready")
+
+    assert response.status_code == 503
+    assert response.json()["detail"] == "Embedding service unavailable"
 
 
 def test_embed_rejects_missing_api_key(monkeypatch) -> None:
